@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View, ActivityIndicator, Text } from 'react-native';
+import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import PeopleList from '../components/PeopleList';
 import { fetchPeople } from '../redux/actions/peopleActions';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -14,12 +15,14 @@ const AppContainer = props => {
 
   console.log('props', props);
 
-  let content = props.randomPeople.people.map(p =>
-    p ? <Text>{p.name.first}</Text> : <Text>No Data</Text>
-  );
+  let content = <PeopleList people={props.randomPeople.people} />;
 
   if (props.randomPeople.isFetching) {
-    return <ActivityIndicator size="large" />;
+    return (
+      <View style={[styles.container, styles.horizontal]}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
   }
   return <View>{content}</View>;
 };
@@ -37,3 +40,15 @@ export default connect(
   mapStateToProps,
   { fetchPeople }
 )(AppContainer);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  horizontal: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 10,
+  },
+});
